@@ -68,26 +68,27 @@ const SendMoney = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: '#f3f4f6',
+        background: 'var(--page-gradient)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        fontFamily: 'Arial, sans-serif',
+        color: 'var(--text)',
       }}
     >
       <div
         style={{
           width: '100%',
           maxWidth: 440,
-          background: '#fff',
-          borderRadius: 14,
+          background: 'var(--card-bg)',
+          borderRadius: 18,
           padding: 24,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+          boxShadow: 'var(--shadow)',
+          border: '1px solid var(--border)',
         }}
       >
         <h1 style={{ margin: 0, fontSize: 28 }}>Send Money</h1>
-        <p style={{ marginTop: 8, color: '#4b5563' }}>
+        <p style={{ marginTop: 8, color: 'var(--muted)' }}>
           You are sending money to <strong>{recipientName}</strong>
         </p>
 
@@ -105,16 +106,18 @@ const SendMoney = () => {
             placeholder='Enter amount'
             style={{
               width: '100%',
-              border: '1px solid #d1d5db',
-              borderRadius: 8,
+              border: '1px solid var(--border)',
+              borderRadius: 10,
               padding: '12px 14px',
               fontSize: 16,
               boxSizing: 'border-box',
+              background: 'var(--surface-solid)',
+              color: 'var(--text)',
             }}
           />
 
           {error ? (
-            <p style={{ marginTop: 10, color: '#b91c1c', fontSize: 14 }}>
+            <p style={{ marginTop: 10, color: 'var(--danger)', fontSize: 14 }}>
               {error}
             </p>
           ) : null}
@@ -126,9 +129,9 @@ const SendMoney = () => {
                 flex: 1,
                 textAlign: 'center',
                 textDecoration: 'none',
-                color: '#111827',
-                border: '1px solid #d1d5db',
-                borderRadius: 8,
+                color: 'var(--text)',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
                 padding: '11px 12px',
                 fontWeight: 600,
               }}
@@ -141,10 +144,10 @@ const SendMoney = () => {
               style={{
                 flex: 1,
                 border: 'none',
-                borderRadius: 8,
+                borderRadius: 10,
                 padding: '12px 12px',
-                background: loading ? '#93c5fd' : '#2563eb',
-                color: '#fff',
+                background: loading ? 'rgba(14, 165, 233, 0.6)' : 'var(--accent)',
+                color: '#0b1120',
                 fontWeight: 700,
                 cursor: loading ? 'not-allowed' : 'pointer',
               }}

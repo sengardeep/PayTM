@@ -2,10 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { apiRequest } from './lib/api'
 import { clearSession, getDisplayName } from './lib/auth'
+import { useTheme } from './lib/theme'
 
 const Dashboard = () => {
     const navigate = useNavigate()
     const location = useLocation()
+    const { theme, toggleTheme } = useTheme()
 
     const [balance, setBalance] = useState(0)
     const [users, setUsers] = useState([])
@@ -99,22 +101,24 @@ const Dashboard = () => {
     }
 
     const cardStyle = {
-        background: '#ffffff',
-        borderRadius: 12,
+        background: 'var(--card-bg)',
+        borderRadius: 16,
         padding: 20,
-        boxShadow: '0 6px 18px rgba(0,0,0,0.08)',
+        boxShadow: 'var(--shadow)',
+        border: '1px solid var(--border)',
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: '#f4f6f8' }}>
+        <div style={{ minHeight: '100vh', background: 'var(--page-gradient)', color: 'var(--text)' }}>
             <div
                 style={{
                     position: 'sticky',
                     top: 0,
                     zIndex: 100,
-                    background: '#fff',
-                    borderBottom: '1px solid #e5e7eb',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
+                    background: 'var(--nav-bg)',
+                    borderBottom: '1px solid var(--border)',
+                    boxShadow: '0 2px 12px rgba(15, 23, 42, 0.12)',
+                    backdropFilter: 'blur(12px)',
                 }}
             >
                 <div
@@ -129,8 +133,23 @@ const Dashboard = () => {
                 >
                     <div style={{ fontSize: 22, fontWeight: 700 }}>PayTM</div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ fontWeight: 600, color: '#111827' }}>{username}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                        <button
+                            type='button'
+                            onClick={toggleTheme}
+                            style={{
+                                border: '1px solid var(--border)',
+                                borderRadius: 999,
+                                padding: '8px 14px',
+                                background: 'transparent',
+                                color: 'var(--text)',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                            }}
+                        >
+                            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                        </button>
+                        <span style={{ fontWeight: 600, color: 'var(--text)' }}>{username}</span>
                         <button
                             type='button'
                             onClick={handleLogout}
@@ -138,7 +157,7 @@ const Dashboard = () => {
                                 border: 0,
                                 borderRadius: 8,
                                 padding: '10px 14px',
-                                background: '#dc3545',
+                                background: 'var(--danger)',
                                 color: '#fff',
                                 cursor: 'pointer',
                             }}
@@ -152,7 +171,7 @@ const Dashboard = () => {
             <div style={{ maxWidth: 1100, margin: '0 auto', padding: 24 }}>
                 <div style={{ ...cardStyle, marginBottom: 24 }}>
                     <h1 style={{ margin: 0, fontSize: 28 }}>Dashboard</h1>
-                    <p style={{ margin: '8px 0 0', color: '#666' }}>Available balance</p>
+                    <p style={{ margin: '8px 0 0', color: 'var(--muted)' }}>Available balance</p>
                     <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>
                         {loadingBalance ? 'Loading...' : `Rs. ${Number(balance).toLocaleString()}`}
                     </div>
@@ -163,9 +182,9 @@ const Dashboard = () => {
                         style={{
                             ...cardStyle,
                             marginBottom: 24,
-                            border: '1px solid #bbf7d0',
-                            color: '#166534',
-                            background: '#f0fdf4',
+                            border: '1px solid rgba(34, 197, 94, 0.35)',
+                            color: 'var(--success)',
+                            background: 'rgba(34, 197, 94, 0.1)',
                         }}
                     >
                         {successMessage}
@@ -177,9 +196,9 @@ const Dashboard = () => {
                         style={{
                             ...cardStyle,
                             marginBottom: 24,
-                            border: '1px solid #f5c2c7',
-                            color: '#b02a37',
-                            background: '#fff5f5',
+                            border: '1px solid rgba(248, 113, 113, 0.35)',
+                            color: 'var(--danger)',
+                            background: 'rgba(248, 113, 113, 0.12)',
                         }}
                     >
                         {error}
@@ -208,7 +227,9 @@ const Dashboard = () => {
                                 maxWidth: 280,
                                 padding: '10px 12px',
                                 borderRadius: 8,
-                                border: '1px solid #d1d5db',
+                                border: '1px solid var(--border)',
+                                background: 'var(--surface-solid)',
+                                color: 'var(--text)',
                                 outline: 'none',
                             }}
                         />
@@ -230,16 +251,16 @@ const Dashboard = () => {
                                 <div
                                     key={user._id}
                                     style={{
-                                        border: '1px solid #e5e7eb',
-                                        borderRadius: 12,
+                                        border: '1px solid var(--border)',
+                                        borderRadius: 14,
                                         padding: 16,
-                                        background: '#fff',
+                                        background: 'var(--surface)',
                                     }}
                                 >
                                     <div style={{ fontWeight: 600, fontSize: 16 }}>
                                         {getUserFullName(user)}
                                     </div>
-                                    <div style={{ color: '#666', marginTop: 4 }}>
+                                    <div style={{ color: 'var(--muted)', marginTop: 4 }}>
                                         @{user.username}
                                     </div>
                                     <button
@@ -251,8 +272,8 @@ const Dashboard = () => {
                                             border: 0,
                                             borderRadius: 8,
                                             padding: '10px 12px',
-                                            background: '#0d6efd',
-                                            color: '#fff',
+                                            background: 'var(--accent)',
+                                            color: '#0b1120',
                                             cursor: 'pointer',
                                         }}
                                     >
