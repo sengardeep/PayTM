@@ -48,3 +48,49 @@ body {
 	background: var(--bg);
 	color: var(--text);
 }
+
+body,
+button,
+input,
+textarea,
+select,
+a,
+nav,
+section,
+div {
+	transition: background-color 280ms ease, color 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+}
+
+.page-transition {
+	animation: page-enter 360ms ease;
+	min-height: 100vh;
+}
+
+@keyframes page-enter {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body,
+	button,
+	input,
+	textarea,
+	select,
+	a,
+	nav,
+	section,
+	div {
+		transition: none;
+	}
+
+	.page-transition {
+		animation: none;
+	}
+}

@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 import { authMiddleware } from '../auth/middleware.js';
-import { Account, User } from '../db.js';
+import { Account, Ledger, User } from '../db.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
 const accountRouter = express.Router();
@@ -81,7 +82,25 @@ accountRouter.post('/transfer', authMiddleware, asyncHandler(async (req, res) =>
             { session }
         );
 
-        // Persist both balance updates as one atomic commit.
+        const previousEntry = await Ledger.findOne({}, { hash: 1 })
+            .sort({ createdAt: -1 })
+            .session(session);
+
+        const prevHash = previousEntry?.hash || 'GENESIS';
+        const ledgerTimestamp = new Date();
+        const payload = `${prevHash}:${req.userId}:${to}:${transferAmount}:${ledgerTimestamp.toISOString()}`;
+        const hash = crypto.createHash('sha256').update(payload).digest('hex');
+
+        await Ledger.create([{
+            fromUserId: req.userId,
+            toUserId: to,
+            amount: transferAmount,
+            prevHash,
+            hash,
+            createdAt: ledgerTimestamp
+        }], { session });
+
+        // Persist both balance updates and ledger record as one atomic commit.
         await session.commitTransaction();
         return res.status(200).json({ message: 'Transfer successful' });
     } catch {

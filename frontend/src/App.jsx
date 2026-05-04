@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import Signin from './Signin'
 import Signup from './Signup'
 import Dashboard from './Dashboard'
@@ -31,26 +31,35 @@ const HomeRedirect = () => {
   return <Landing />
 }
 
-function App() {
+const AppRoutes = () => {
+  const location = useLocation()
 
+  return (
+    <div className='page-transition' key={location.pathname}>
+      <Routes location={location}>
+        <Route path='/' element={<HomeRedirect />} />
+
+        <Route element={<GuestRoute />}>
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/signin' element={<Signin />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/send' element={<SendMoney />} />
+        </Route>
+
+        <Route path='*' element={<HomeRedirect />} />
+      </Routes>
+    </div>
+  )
+}
+
+function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<HomeRedirect />} />
-
-          <Route element={<GuestRoute />}>
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/signin' element={<Signin />} />
-          </Route>
-
-          <Route element={<ProtectedRoute />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/send' element={<SendMoney />} />
-          </Route>
-
-          <Route path='*' element={<HomeRedirect />} />
-        </Routes>
+        <AppRoutes />
       </BrowserRouter>
     </ThemeProvider>
   )
